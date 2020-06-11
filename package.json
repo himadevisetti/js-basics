@@ -11,7 +11,8 @@
   "author": {
     "name": "Hima Bindu Devisetti"
   },
-  "license": "ISC",
+  "repository": "https://github.com/himadevisetti/js-basics",
+  "license": "HBD",
   "dependencies": {
     "@google-cloud/pubsub": "^2.1.0",
     "@google-cloud/storage": "^5.0.1",
