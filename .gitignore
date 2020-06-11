@@ -1,0 +1,16 @@
+.env
+**/.gcloudignore
+.vscode
+**/*.log
+**/node_modules
+.coverage
+.nyc_output
+docs/
+out/
+build/
+*key.json
+*.lock
+.DS_Store
+**/coverage/*
+**/package-lock.json
+
