@@ -3,9 +3,14 @@
 const express = require('express');
 const Multer = require('multer');
 const {Storage} = require('@google-cloud/storage');
-const {PubSub} = require('@google-cloud/pubsub');
 const path = require('path');
 const bodyParser = require('body-parser');
+const firebase = require("firebase");
+
+// Add the Firebase products
+require("firebase/firestore");
+
+const {Firestore} = require('@google-cloud/firestore');
 
 // Load environment variables
 const dotenv = require('dotenv');
@@ -17,11 +22,11 @@ const googleCloudStorage = new Storage({
   keyFilename: process.env.GCLOUD_KEY_FILE
 });
 
-// Creates a client; cache this for further use
-const pubSubClient = new PubSub();
-
-// PubSub topic details
-const topicName = process.env.GOOGLE_PUBSUB_TOPIC;
+// Create a new firestore client
+const firestore = new Firestore({
+    projectId: process.env.GOOGLE_CLOUD_PROJECT,
+    keyFilename: process.env.GCLOUD_KEY_FILE
+});
 
 // Instantiate an express server
 const app = express();
@@ -52,7 +57,7 @@ app.post("/upload", multer.single("file"), (req, res, next) => {
 
   // The public URL can be used to directly access the file via HTTP.
   const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`; 
-  
+
   if (!req.file) {
     res.status(400).send("No file uploaded.");
     return;
@@ -78,33 +83,48 @@ app.post("/upload", multer.single("file"), (req, res, next) => {
   });
 
   blobStream.end(req.file.buffer);
+
+  var collection; 
+  var document; 
+  
+  async function writeToFirestore() {
+
+    // Obtain a document reference.
+    collection = firestore.collection('userdata');
+    document = collection.doc();
+
+    // Enter new data into the document.
+    await document.set({
+      source_language: req.body.srclang,
+      target_language: req.body.tgtlang,
+      bucket_name: `${bucket.name}`,
+      file_name: req.file.originalname,
+      public_url: `${publicUrl}`
+    });
+
+  }
+
+  writeToFirestore().catch(console.error);
+
   var response = {
     source_language:req.body.srclang,
     target_language:req.body.tgtlang,
+    bucket_name:`${bucket.name}`,
     file_name:req.file.originalname,
-    public_url:`${publicUrl}`
+    public_url:`${publicUrl}`,
+    document_id: `${document.id}`
   };
   console.log("Source Language: " + response.source_language); 
   console.log("Target Language: " + response.target_language);
+  console.log("Bucket Name: " + response.bucket_name); 
   console.log("File Name: " + response.file_name);
   console.log("Public Url: " + response.public_url); 
-
-  const publish_data = JSON.stringify(response); 
-  
-  async function publishMessage() {
-    // Publishes the message as a string, e.g. "Hello, world!" or JSON.stringify(someObject)
-    const dataBuffer = Buffer.from(publish_data);
-    const messageId = await pubSubClient.topic(topicName).publish(dataBuffer);
-    console.log(`Message ${messageId} published.`); 
-  }
-
-  publishMessage().catch(console.error);
-  // [END pubsub_publish]
+  console.log('Document Id:', response.document_id);
 
   response = {
     source_language:req.body.srclang,
     target_language:req.body.tgtlang,
-    message:`Success! File uploaded to ${publicUrl} and message published`
+    message:`Success! File uploaded to ${publicUrl} and database updated with ${document.id}`
   };
   res.end(JSON.stringify(response));
 

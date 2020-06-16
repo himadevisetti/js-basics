@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload an audio/video file to GCS using Node JS</title>
+    <title>Upload an audio/video file</title>
     <style>
         div {
-          width: 600px;
-          margin: 40px auto;
+          width: 300px;
+          margin: 80px auto;
         }
     </style>
 </head>
@@ -17,18 +17,22 @@
         <form action="/upload" method="post" enctype="multipart/form-data">
           <label for="srclang">Source Language:</label>
           <select id="srclang" name="srclang" data-placeholder="Choose a Language...">
-            <option value="EN">English</option>
-            <option value="TE">Telugu</option>
+            <option value="en-US">English</option>
+            <option value="te-IN">Telugu</option>
           </select><br><br>
           <label for="tgtlang">Target Language:</label>
           <select id="tgtlang" name="tgtlang" data-placeholder="Choose a Language...">
-            <option value="EN">English</option>
-            <option value="TE">Telugu</option>
+            <option value="en-US">English</option>
+            <option value="te-IN">Telugu</option>
           </select><br><br>
           <label for="file">Audio/ Video File Name:</label><br>
           <input type="file" id="file" name="file"><br><br><br>
           <input type="submit" value="Upload" name="submit">
         </form>
-    </div> 
+    </div>
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.15.0/firebase-firestore.js"></script>
+    <script src="./init-firebase.js"></script> 
 </body>
 </html>

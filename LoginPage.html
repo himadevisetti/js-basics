@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload an audio/video file</title>
+    <style>
+        div {
+          width: 300px;
+          margin: 80px auto;
+        }
+		.boxed {
+		  width: 300px;
+		  height: 500px;
+		  text-align: center;
+		  border-radius: 20px;
+		  border: 2px solid black;
+		  font-size:14px;
+        }
+		.button {
+		  background-color: #7B68EE;
+		  border-radius: 10px;
+		  border: none;
+		  color: white;
+		  padding: 8px 18px;
+		  text-align: center;
+		  text-decoration: none;
+		  display: inline-block;
+		  font-size: 14px;
+		  margin: 3px 1px;
+		  cursor: pointer;
+		}
+		.disabled {
+		  opacity: 0.5;
+		  cursor: not-allowed;
+		}
+    </style>
+</head>
+<body> 
+<form action="/login" method="post">
+  <div class="boxed">
+	<h1>Voice Translator</h1>
+	<br><br>
+    <input id="txtEmail" type="email" placeholder="Email"><br><br>
+    <input id="txtPassword" type="password" placeholder="Password"><br><br><br>
+
+    <button id="btnLogin" class="button">Login</button>
+	<button id="btnSignup" class="button">Signup</button>
+	<button id="btnLogout" class="button disabled" hidden>Logout</button>
+	<br><br>
+  </div>
+</form>
+
+</body>
+</html>
